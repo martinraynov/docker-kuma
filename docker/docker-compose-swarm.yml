@@ -1,0 +1,21 @@
+version: '3.7'
+
+networks:
+  default:
+    external: true
+    name: lb-common
+
+services:
+  kuma:
+    image: louislam/uptime-kuma:1.10.2-alpine
+    deploy:
+      replicas: 1
+      labels:
+        traefik.frontend.rule: "Host:kuma.local.io"
+        traefik.enable: "true"
+        traefik.backend: "kuma_back"
+        traefik.port: "3001"
+    volumes:
+      - ../data:/app/data
+    networks:
+      - default
