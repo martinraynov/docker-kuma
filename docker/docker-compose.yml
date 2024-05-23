@@ -1,0 +1,20 @@
+networks:
+  default:
+    external: true
+    name: lb-common
+
+services:
+  kuma:
+    image: louislam/uptime-kuma:1.23.13-alpine
+    container_name: kuma
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.kuma.entrypoints=web"
+      - "traefik.http.routers.kuma.rule=Host(`kuma.local.io`)"
+      - "traefik.http.routers.kuma.service=svc_kuma"
+      - "traefik.http.services.svc_kuma.loadbalancer.server.port=3001"
+    volumes:
+      - ../data:/app/data
+    networks:
+      - default

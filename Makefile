@@ -8,15 +8,25 @@ help: ## Prints this help message
 ### MAIN FUNCTIONS ###
 ######################
 
-.PHONY: kuma_start
-kuma_start: ## Start the kuma docker container
-	$(info $(M) Starting an instance of kuma)
+.PHONY: start_swarm
+start_swarm: ## Start the kuma docker container in swarm mode
+	$(info $(M) Starting an instance of kuma in swarm mode)
 	@docker stack rm kuma
 	@docker stack deploy -c ./docker/docker-compose-swarm.yml kuma
 
-.PHONY: kuma_stop
-kuma_stop: ## Stopping running kuma instances
-	$(info $(M) Stopping kuma instance)
+.PHONY: stop_swarm
+stop_swarm: ## Stopping running kuma instances in swarm mode
+	$(info $(M) Stopping kuma instance in swarm mode)
 	@docker stack rm kuma
+
+.PHONY: start
+start: ## Start the kuma docker container
+	$(info $(M) Starting an instance of kuma at : kuma.local.io)
+	@docker-compose -f ./docker/docker-compose.yml up -d
+
+.PHONY: stop
+stop: ## Stopping running kuma instances
+	$(info $(M) Stopping kuma instance)
+	@docker-compose -f ./docker/docker-compose.yml down
 
 .DEFAULT_GOAL := help
